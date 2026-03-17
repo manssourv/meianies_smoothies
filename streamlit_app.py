@@ -25,8 +25,8 @@ session = cnx.session()
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('fruit_name'),col('search_on'))
 # st.dataframe(data=my_dataframe, use_container_width=True)
 pd_df=my_dataframe.to_pandas()
-st.dataframe(pd_df)
-st.stop()
+# st.dataframe(pd_df)
+# st.stop()
 
 ingredients_string=''
 ingredients_list = st.multiselect('Choose up to 5 ingredients:'
@@ -34,6 +34,8 @@ ingredients_list = st.multiselect('Choose up to 5 ingredients:'
 if ingredients_list:
     for k in ingredients_list:
       ingredients_string+=k+' '
+      search_on=pd_df.loc[pd_df['FRUIT_NAME'] == k, 'SEARCH_ON'].iloc[0]
+      st.write('The search value for ', k,' is ', search_on, '.')
       st.subheader(k+" Nutrition Information")
       smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/"+k)  
       sf_df= st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
